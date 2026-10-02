@@ -1,10 +1,10 @@
+// import { Loading, ErrorPage, NotFound } from '@vezham/templates'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
 import { defineConfig } from '@vx/start'
 
-// import { Loading, ErrorPage, NotFound } from '@vezham/templates'
+import { routeTree } from '@src/routeTree.gen'
 
-import { routeTree } from '../routeTree.gen'
 import './global.css'
 
 // @vx/NOTE: Create a new router instance

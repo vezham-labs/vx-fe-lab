@@ -1,4 +1,4 @@
-import { usePosts } from '../../store/usePosts'
+import { usePosts } from '@store/usePosts'
 
 export default () => {
   const { data, error, isPending, isError } = usePosts()

@@ -22,7 +22,6 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "paths": {
       "@/data/*": ["./data/*"],
       "@/src/*": ["./src/*"],

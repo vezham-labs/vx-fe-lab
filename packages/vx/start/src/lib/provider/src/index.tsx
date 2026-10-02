@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FC, StrictMode, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { VezhamProvider, cn } from '@vezham/react/v2'
+import { VezhamProvider, cn } from '@vezham/react-v2'
 // import { Toaster } from 'sonner'
 
 // import { initWorker } from '@vezham/contracts'
@@ -66,7 +66,6 @@ const Provider: FC<Props> = ({
   if (query) {
     template = (
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools />
         {__DEV__ ? <ReactQueryDevtools /> : null}
         {template}
       </QueryClientProvider>

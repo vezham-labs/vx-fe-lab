@@ -50,7 +50,6 @@
       "plugin": "@nx/vite/plugin",
       "options": {
         "buildTargetName": "build",
-        "testTargetName": "test",
         "serveTargetName": "serve",
         "devTargetName": "dev",
         "previewTargetName": "preview",
@@ -66,16 +65,46 @@
         "targetName": "e2e"
       }
     },
-    "@vx-cli/react"
+    "@vx-cli/react",
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test"
+      }
+    }
   ],
   "targetDefaults": {
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "options": {
+        "command": "bash -lc 'vitest --config \"$(git rev-parse --show-toplevel)/vitest.config.ts\" --passWithNoTests'"
+      }
     },
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "hosts:setup": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "NAME=${name:-{projectName}} && sudo pnpm exec hostile set localhost $NAME.vezham.local && sudo pnpm exec hostile set localhost $NAME.mock.vezham.local"
+      }
+    },
+    "routes:tanstack": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsr generate"
+      }
+    },
+    "routes:tanstack:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "tsr watch"
+      }
     }
   },
   "generators": {
@@ -159,5 +188,6 @@
     "releaseTag": {
       "pattern": "{version}"
     }
-  }
+  },
+  "analytics": false
 }

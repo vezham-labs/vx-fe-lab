@@ -18,7 +18,8 @@ const config = {
     '^@vx-oss/(.*)$',
     '^@vx-pro/(.*)$',
     '^@vx/(.*)$',
-    '^@/(.*)$',
+    '^(?:@/|@src/|@pages/|@components/|@store/)(.*)$',
+    // '^@/(.*)$',
     '^[./]'
   ],
   importOrderSeparation: true,

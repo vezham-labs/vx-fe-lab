@@ -76,11 +76,19 @@ testem.log
 Thumbs.db
 
 # System Files - Nx
+.github/instructions/nx.instructions.md
+
+.nx/powerpack
+.nx/installation
 .nx/cache
 .nx/workspace-data
-.nx/powerpack
+.nx/self-healing
+.nx/polygraph
+
 .cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
+
+.claude/worktrees
+.claude/settings.local.json
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*

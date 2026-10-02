@@ -4,16 +4,8 @@
   "projectType": "application",
   "sourceRoot": "apps_internals/playground/src",
   "targets": {
-    "config-local-hostile": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "apps_internals/playground",
-        "commands": [
-          "sudo pnpm exec hostile set localhost playground.vezham.local && sudo pnpm exec hostile set localhost playground.mock.vezham.local"
-        ],
-        "parallel": false
-      }
-    }
+    "hosts:setup": {},
+    "routes:tanstack": {}
   },
   "tags": ["category:internal"]
 }

@@ -2,6 +2,21 @@
   "name": "@vx",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "targets": {
+    "@vx-ws/kill-port": {
+      "command": "port=\"{args.port}\"; if [ -z \"$port\" ] || [ \"$port\" = \"{args.port}\" ]; then read -r -p \"Port to kill: \" port; fi; pids=$(lsof -ti :$port); [ -z \"$pids\" ] || kill -9 $pids"
+    },
+    "@hui-pro/status": {
+      "command": "pnpm dlx heroui-pro@latest status"
+    },
+    "@hui-pro/login": {
+      "command": "pnpm dlx heroui-pro@latest login"
+    },
+    "@hui-pro/install": {
+      "command": "pnpm dlx heroui-pro@latest install"
+    },
+    "@hui-pro/upgrade": {
+      "command": "pnpm dlx heroui-pro@latest"
+    },
     "@vx-ws/clean": {
       "executor": "nx:run-commands",
       "options": {

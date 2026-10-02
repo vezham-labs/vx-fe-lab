@@ -1,5 +1,9 @@
 @import 'tailwindcss';
-@import '@vezham/styles';
+@import '@vezham/styles-v3';
+
+/* wjdlz/NOTE: for pro */
+@import '@heroui-pro/react/css';
+@import '@heroui-pro/react/themes/glass';
 
 @plugin './plugin.ts';
 

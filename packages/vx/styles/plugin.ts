@@ -1,3 +1,3 @@
-import { vezham } from '@vezham/react/v2-plugin'
+import { vezham } from '@vezham/react-v2'
 
 export default vezham()
