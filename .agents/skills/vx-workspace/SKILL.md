@@ -10,7 +10,7 @@ skill and handbook relevant to the task instead of loading every linked file.
 
 ## Workspace Map
 
-- Applications can live under `apps/` or category folders such as `apps_*`.
+- Applications can live under `apps/` or category folders such as `apps-*`.
   Discover their actual roots through Nx instead of assuming one app directory.
 - Packages live under `packages/*`. Discover their actual project roots through
   Nx.

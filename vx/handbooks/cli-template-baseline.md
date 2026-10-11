@@ -106,9 +106,9 @@ temporary debugging state, local paths, command output, or a transcript of the
 review.
 
 The current reference apps cover a basic TanStack app
-(`apps_internals/playground-app`), a CDN-oriented Vite app
-(`apps_internals/playground-cdn`), a docs app
-(`apps_internals/playground-docs`), and additional playground, TanStack Start,
+(`apps-internals/playground-app`), a CDN-oriented Vite app
+(`apps-internals/playground-cdn`), a docs app
+(`apps-internals/playground-docs`), and additional playground, TanStack Start,
 and Next.js scenarios. These are examples to evaluate, not a fixed list of
 files for the CLI to copy.
 

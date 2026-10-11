@@ -120,7 +120,7 @@ export default [
       '**/*.config.*',
       '**/*.stories.*',
       '**/routes/**',
-      '{apps,apps_*}/**/src/{pages,vx-pages}/**',
+      '{apps,apps-*}/**/src/{pages,vx-pages}/**',
       '**/app/**/page.{ts,tsx,js,jsx}',
       '**/app/**/{layout,template,loading,error,global-error,not-found,default,global-not-found}.{ts,tsx,js,jsx}',
       '**/app/**/{sitemap,robots,manifest,opengraph-image,twitter-image,icon,apple-icon}.{ts,tsx,js,jsx}',
@@ -219,7 +219,7 @@ export default [
   // --- * ---
   // @components-store / @hooks-store
   // {
-  //   // wjdlz/NOTE: ref - apps_internals/storybook/src/store/blogs/usePosts/index.ts
+  //   // wjdlz/NOTE: ref - apps-internals/storybook/src/store/blogs/usePosts/index.ts
   //   files: ["**/**/src/store/**/**/*.ts"],
   //   rules: {
   //     "@tanstack/query/exhaustive-deps": "off",

@@ -254,7 +254,7 @@ export default config.map(entry => entry.basePath ? { ...entry, basePath: ${JSON
   )
   for (const project of [
     'apps/example',
-    'apps_internal/example',
+    'apps-internal/example',
     'packages/example'
   ]) {
     const directory = path.join(root, project)
@@ -274,7 +274,7 @@ test('shared configuration scopes framework exceptions and agent exclusion', asy
     (await lint.calculateConfigForFile(path)).rules[`@vx-lint/${rule}`]?.[0] ??
     0
   for (const path of [
-    'apps_internal/example/src/pages/home/index.tsx',
+    'apps-internal/example/src/pages/home/index.tsx',
     'apps/example/src/vx-pages/pro/index.tsx',
     'apps/example/src/pages/home/index.tsx'
   ]) {
@@ -347,7 +347,7 @@ test('folder-local props exception stays scoped to internal types modules', asyn
 test('named export exceptions work from Nx project working directories', async t => {
   const root = await createWorkspace(t)
   for (const [project, filePath, expected] of [
-    ['apps_internal/example', 'src/pages/home/index.tsx', 0],
+    ['apps-internal/example', 'src/pages/home/index.tsx', 0],
     ['apps/example', 'src/vx-pages/home/index.tsx', 0],
     ['packages/example', 'src/lib/pages/home/index.tsx', 1]
   ]) {

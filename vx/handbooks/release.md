@@ -57,7 +57,7 @@ Main apps keep these files in sync:
 ```
 
 `<apps-category>` can be any app category generated or managed by
-`@vx-cli/react`, such as `apps_internals`, `apps_cdns`, `apps`, or another
+`@vx-cli/react`, such as `apps-internals`, `apps-cdns`, `apps`, or another
 workspace app grouping.
 
 The source release step is `nx release`. The workspace config uses a custom

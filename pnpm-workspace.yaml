@@ -2,7 +2,7 @@ packages:
   - 'packages/*/*'
   - '!packages/vx/styles'
   - 'apps/*'
-  - 'apps_*/*'
+  - 'apps-*/*'
 
 catalog:
   '@internationalized/date': 3.12.4

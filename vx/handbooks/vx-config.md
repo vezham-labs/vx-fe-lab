@@ -28,7 +28,7 @@ Keep the app's Vite config thin. App-specific route intent should live in
 Each app owns its config at the project root:
 
 ```text
-apps_internals/playground-docs/vx.app.yaml
+apps-internals/playground-docs/vx.app.yaml
 ```
 
 The playground docs Vite config should use the shared docs helper:
