@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vezham.com/schemas/vx.deploy.json",
+  "title": "Vx deployment configuration",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "preset": {
+      "enum": ["cdn", "spa", "start-spa", "next", "tanstack-start"]
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "enum": ["firebase", "vercel"]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "A single preset can target multiple compatible hosting providers."
+    },
+    "redirectDefaultLanguage": {
+      "type": "boolean"
+    },
+    "firebase": {
+      "type": "object",
+      "properties": {
+        "cleanUrls": {
+          "type": "boolean"
+        },
+        "headers": {
+          "anyOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string"
+                  },
+                  "headers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["key", "value"],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": ["source", "headers"],
+                "additionalProperties": false
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "app": {
+                  "type": "boolean"
+                },
+                "docs": {
+                  "type": "boolean"
+                },
+                "routes": {
+                  "type": "boolean"
+                },
+                "static": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "ignore": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "public": {
+          "type": "string"
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "destination": {
+                "type": "string"
+              },
+              "type": {
+                "type": "number"
+              }
+            },
+            "required": ["source", "destination", "type"],
+            "additionalProperties": false
+          }
+        },
+        "rewrites": {
+          "anyOf": [
+            {
+              "const": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string"
+                  },
+                  "destination": {
+                    "type": "string"
+                  }
+                },
+                "required": ["source", "destination"],
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "vercel": {
+      "type": "object",
+      "properties": {
+        "buildCommand": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["providers"],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "required": ["preset"],
+        "properties": {
+          "preset": {
+            "enum": ["next", "tanstack-start"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "providers": {
+            "items": {
+              "const": "vercel"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

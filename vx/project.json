@@ -3,25 +3,13 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "@vx-ws/kill-port": {
-      "command": "port=\"{args.port}\"; if [ -z \"$port\" ] || [ \"$port\" = \"{args.port}\" ]; then read -r -p \"Port to kill: \" port; fi; pids=$(lsof -ti :$port); [ -z \"$pids\" ] || kill -9 $pids"
-    },
-    "@hui-pro/status": {
-      "command": "pnpm dlx heroui-pro@latest status"
-    },
-    "@hui-pro/login": {
-      "command": "pnpm dlx heroui-pro@latest login"
-    },
-    "@hui-pro/install": {
-      "command": "pnpm dlx heroui-pro@latest install"
-    },
-    "@hui-pro/upgrade": {
-      "command": "pnpm dlx heroui-pro@latest"
+      "command": "{workspaceRoot}/vx/bin/workspace/kill-port.sh {args.port}"
     },
     "@vx-ws/clean": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run @vx:clean-ca",
+          "nx run @vx:clean-base",
           "pnpm install --no-frozen-lockfile"
         ],
         "parallel": false
@@ -31,12 +19,13 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "sort-package-json \"package.json\" \"**/**/package.json\" \"packages/**/**/package.json\" --quiet",
+          "sort-package-json \"package.json\" \"**/package.json\" \"!**/node_modules/**\" --quiet",
           "prettier . --write --log-level silent --cache --cache-strategy metadata",
           "eslint --cache --cache-strategy metadata",
           "stylelint \"**/*.{css,module.css}\" --allow-empty-input --cache --cache-strategy metadata"
         ],
-        "parallel": false
+        "parallel": true,
+        "forwardAllArgs": false
       }
     },
     "@vx-ws/fix": {
@@ -48,6 +37,51 @@
         ],
         "// commands": ["sort-package-json", "prettier"],
         "parallel": false
+      }
+    },
+    "@vx-ws/audit": {
+      "command": "node vx/tools/audit/index.mjs",
+      "dependsOn": ["test:eslint"],
+      "cache": false
+    },
+    "@vx-ws/audit:fallow": {
+      "command": "pnpm exec fallow",
+      "cache": false
+    },
+    "@vx-ws/audit:fallow-fix-preview": {
+      "command": "pnpm exec fallow fix --dry-run --no-create-config",
+      "cache": false
+    },
+    "@vx-ws/audit:fallow-fix": {
+      "command": "pnpm exec fallow fix --yes --no-create-config",
+      "cache": false
+    },
+    "@vx-ws/audit:react-doctor": {
+      "command": "pnpm exec react-doctor --yes --no-supply-chain",
+      "cache": false
+    },
+    "@hui-pro/status": {
+      "command": "pnpm dlx --allow-build=@zowe/secrets-for-zowe-sdk heroui-pro@latest status"
+    },
+    "@hui-pro/login": {
+      "command": "pnpm dlx --allow-build=@zowe/secrets-for-zowe-sdk heroui-pro@latest login"
+    },
+    "@hui-pro/install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm dlx --allow-build=@zowe/secrets-for-zowe-sdk heroui-pro@latest install",
+        "env": {
+          "PNPM_CONFIG_IGNORE_WORKSPACE_ROOT_CHECK": "true"
+        }
+      }
+    },
+    "@hui-pro/upgrade": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm dlx --allow-build=@zowe/secrets-for-zowe-sdk heroui-pro@latest update",
+        "env": {
+          "PNPM_CONFIG_IGNORE_WORKSPACE_ROOT_CHECK": "true"
+        }
       }
     },
     "nx:graph": {
@@ -62,17 +96,24 @@
     "tw:migrate": {
       "command": "npx @tailwindcss/upgrade"
     },
-    "clean-ca": {
+    "clean-base": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "rm -rf ./packages/**/**/dist",
           "rm -rf ./**/**/dist",
           "rm -rf ./dist",
+          "rm -rf ./packages/**/**/.next",
+          "rm -rf ./**/**/.next",
+          "rm -rf ./.next",
           "rm -rf ./packages/**/**/out-tsc",
           "rm -rf ./**/**/out-tsc",
+          "rm -rf ./**/**/.tanstack",
+          "rm -rf ./.tanstack",
+          "rm -rf ./**/**/.output",
           "rm -rf ./packages/**/**/test-output",
           "rm -rf ./**/**/test-output",
+          "rm -rf ./test-output",
           "rm -rf ./packages/**/**/node_modules",
           "rm -rf ./**/**/node_modules",
           "rm -rf ./node_modules"
@@ -84,7 +125,7 @@
     "clean-hard": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["nx run @vx:clean-ca", "rm ./pnpm-lock.yaml"],
+        "commands": ["nx run @vx:clean-base", "rm ./pnpm-lock.yaml"],
         "parallel": false
       }
     },
@@ -98,32 +139,37 @@
       "command": "rm -rf ./.nx"
     },
     "test-hard": {
-      "command": "vitest"
+      "command": "pnpm nx run-many -t test --exclude=@vx/fe-kit --passWithNoTests"
     },
     "test:clean": {
-      "command": "vitest --clearScreen",
+      "command": "pnpm nx run-many -t test --exclude=@vx/fe-kit --passWithNoTests --clearScreen",
       "//TODO": "&& pnpm clean"
     },
     "test:changedsince": {
-      "command": "vitest --changed --coverage"
+      "command": "pnpm nx run-many -t test --exclude=@vx/fe-kit --skipNxCache --passWithNoTests --changed --coverage"
     },
     "test:coverage": {
-      "command": "vitest --coverage"
+      "command": "pnpm nx run-many -t test --exclude=@vx/fe-kit --passWithNoTests --coverage"
     },
     "test:unit": {
-      "command": "vitest --reporter=json --outputFile=dist/.unit-test-results.json"
+      "command": "pnpm nx run-many -t test --exclude=@vx/fe-kit --skipNxCache --passWithNoTests --reporter=json --outputFile=test-output/vitest/unit-test-results.json"
     },
     "test:unit-nc": {
-      "command": "vitest --reporter=json --outputFile=dist/.unit-test-results.json --no-cache"
+      "command": "pnpm nx run-many -t test --exclude=@vx/fe-kit --skipNxCache --passWithNoTests --reporter=json --outputFile=test-output/vitest/unit-test-results.json --no-cache"
     },
-    "@vx-ws/install": {
-      "command": "pnpm install --no-frozen-lockfile"
+    "test:eslint": {
+      "command": "c8 --all --include='vx/tools/eslint/*.mjs' --reporter=json --reporter=text --reports-dir=test-output/audit/eslint-coverage node --test vx/tools/eslint/tests/*.test.mjs",
+      "cache": false
+    },
+    "@vx-ws/install-update": {
+      "command": "pnpm install --no-frozen-lockfile && pnpm @vx/ws:format",
+      "cache": false
     },
     "@vx-ws/format-hard": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "sort-package-json \"package.json\" \"**/**/package.json\" \"packages/**/**/package.json\"",
+          "sort-package-json \"package.json\" \"**/package.json\" \"!**/node_modules/**\"",
           "prettier . --write",
           "eslint",
           "stylelint \"**/*.{css,module.css}\" --allow-empty-input"
@@ -136,9 +182,30 @@
       "options": {
         "commands": [
           "prettier . --check --cache",
-          "sort-package-json \"package.json\" \"**/**/package.json\"  \"packages/**/**/package.json\""
+          "stylelint \"**/*.{css,module.css}\" --allow-empty-input --cache --cache-strategy metadata",
+          "sort-package-json \"package.json\" \"**/package.json\" \"!**/node_modules/**\""
         ],
         "parallel": false
+      }
+    },
+    "@vx-ci/qa": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "commands": [
+          "pnpm nx run-many -t typecheck",
+          "pnpm nx run-many -t lint",
+          "pnpm nx run @vx:@vx-ci/format-check",
+          "pnpm nx run-many -t test --passWithNoTests --exclude=@vx/fe-kit",
+          "pnpm nx run-many -t e2e",
+          "pnpm nx run-many -t build"
+        ],
+        "env": {
+          "CI": "true",
+          "NX_NO_CLOUD": "true"
+        },
+        "forwardAllArgs": false,
+        "parallel": true
       }
     },
     "@vx-ci/build": {
@@ -156,9 +223,9 @@
       "options": {
         "commands": [
           { "command": "nx run @vx:@vx-ci/build", "forwardAllArgs": false },
-          "tsx vx/tools/release.ts"
+          "tsx vx/tools/release/index.ts"
         ],
-        "// commands": ["tsx vx/tools/release.ts -d --fr"],
+        "// commands": ["tsx vx/tools/release/index.ts -d --fr"],
         "parallel": false
       }
     },

@@ -1,0 +1,167 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.output/**",
+    "**/.next/**",
+    "**/.tanstack/**",
+    "**/.source/**",
+    "**/.nx/**",
+    "**/.git/**",
+    "**/coverage/**",
+    "**/test-output/**",
+    "**/out-tsc/**",
+    "**/*.d.ts",
+    ".agents/**",
+    ".codex/**",
+    ".vezham/**",
+    "**/public/{sw.js,404.html,offline.html}",
+    "**/src/generated/**",
+    "**/content/**/(generated)/**",
+    "**/routeTree.gen.ts",
+    "apps*/**/*-mock/**",
+    // vx-bot/NOTE: Fallow sees this CSS-only directory in the workspace glob but it has no package.json.
+    "packages/vx/styles"
+  ],
+  "entry": [
+    // vx-bot/NOTE: Generated apps import these shared stylesheet roots directly.
+    "packages/vx/styles/{index.css,docs/index.css}",
+    // vx-bot/NOTE: For Next.js app
+    "**/src/app/**/{page,layout,error,global-error,loading,not-found}.tsx",
+    "**/src/app/**/route.ts",
+    // vx-bot/NOTE: For TanStack app
+    "**/src/routes/**/*.{ts,tsx}",
+    "**/src/router.tsx",
+    // vx-bot/NOTE: For TanStack Docs app
+    "**/content/**/*.mdx",
+    // vx-bot/NOTE: Workspace CLI, release, and test files load outside the app import graph.
+    "packages/vx/config/src/lib/{metadata,deploy}/cli.ts",
+    "packages/vx/config/src/lib/presets/docs/cli.ts",
+    "vx/tools/audit/index.mjs",
+    "vx/tools/eslint/tests/*.test.mjs",
+    "vx/tools/release/index.ts",
+    "vx/tools/release/version-actions.cjs"
+  ],
+  "framework": [
+    {
+      "name": "vx-workspace-tools",
+      "enablers": ["nx"],
+      "toolingDependencies": [
+        "@eslint/js",
+        "@nx/plugin",
+        "@swc-node/register",
+        "@swc/helpers",
+        "eslint-config-prettier",
+        "eslint-plugin-import",
+        "eslint-plugin-react",
+        "eslint-plugin-react-hooks",
+        "hostile",
+        "jiti",
+        "react-doctor",
+        "sort-package-json",
+        "tslib",
+        "typescript-eslint",
+        "verdaccio"
+      ]
+    }
+  ],
+  "ignoreDependencies": [
+    "@fontsource/inter",
+    "@fontsource/jura",
+    "@next/eslint-plugin-next",
+    "@number-flow/react",
+    "@nx/devkit",
+    "@nx/eslint-plugin",
+    "@tailwindcss/vite",
+    "@tanstack/react-devtools",
+    "@tanstack/react-query",
+    "@tanstack/react-query-devtools",
+    "@testing-library/react",
+    "@tiptap/core",
+    "@tiptap/extension-link",
+    "@tiptap/extension-underline",
+    "@tiptap/extensions",
+    "@tiptap/pm",
+    "@tiptap/react",
+    "@tiptap/starter-kit",
+    "@tiptap/suggestion",
+    "@vercel/og",
+    "@vezham/docs-core",
+    "@vezham/docs-mdx",
+    "@vezham/docs-openapi",
+    "@vezham/docs-react",
+    "@vezham/docs-story",
+    "@vezham/icons-react",
+    "@vezham/react-pro-v3",
+    "@vezham/react-v2",
+    "@vezham/react-v3",
+    "@vezham/styles-v3",
+    "@vezham/use-logger",
+    "@vitejs/plugin-react-swc",
+    "axios",
+    "embla-carousel",
+    "embla-carousel-react",
+    "eslint-plugin-playwright",
+    "maplibre-gl",
+    "marked",
+    "nitro",
+    "react",
+    "react-dom",
+    "react-markdown",
+    "recharts",
+    "remark-breaks",
+    "remark-gfm",
+    "shiki",
+    "streamdown",
+    // vx-bot/NOTE: React v3's tv exports reference these types in generated declarations.
+    "tailwind-variants",
+    "yaml",
+    "yargs"
+  ],
+  "ignoreDependencyOverrides": [
+    // vx-bot/NOTE: These transitive peer aliases resolve to the forks in pnpm-lock.yaml.
+    { "package": "fumadocs-core", "source": "pnpm-workspace.yaml" },
+    { "package": "fumadocs-ui", "source": "pnpm-workspace.yaml" },
+    // vx-bot/NOTE: Fallow 3.25 reads only the first document of pnpm 12's lockfile.
+    // These security override targets are resolved in the second document.
+    // vx-bot/TODO: Remove these exceptions when Fallow supports multi-document lockfiles;
+    // keep each security override until pnpm audit confirms it is no longer needed.
+    { "package": "sharp", "source": "pnpm-workspace.yaml" },
+    { "package": "uuid", "source": "pnpm-workspace.yaml" },
+    { "package": "qs", "source": "pnpm-workspace.yaml" },
+    { "package": "undici", "source": "pnpm-workspace.yaml" },
+    { "package": "js-yaml", "source": "pnpm-workspace.yaml" },
+    { "package": "smol-toml", "source": "pnpm-workspace.yaml" },
+    { "package": "seroval", "source": "pnpm-workspace.yaml" },
+    { "package": "handlebars", "source": "pnpm-workspace.yaml" },
+    { "package": "http-cache-semantics", "source": "pnpm-workspace.yaml" },
+    { "package": "compression", "source": "pnpm-workspace.yaml" },
+    {
+      "package": "brace-expansion",
+      "source": "pnpm-workspace.yaml"
+    },
+    { "package": "figlet", "source": "pnpm-workspace.yaml" },
+    {
+      "package": "serialize-javascript",
+      "source": "pnpm-workspace.yaml"
+    }
+  ],
+  "duplicates": {
+    "ignore": [
+      // vx-bot/NOTE: CLI app Vite configs stay local so generated apps are self-contained.
+      "apps*/*/vite.config.ts",
+      // vx-bot/NOTE: CLI template pages are copied into each app with its own routes.
+      "apps*/**/src/pages/{home,pro}/index.tsx"
+    ]
+  },
+  "health": {
+    // vx-bot/TODO: Restore coverage enforcement when CLI template tests are established.
+    // Remove maxCrap: 0 and restore the coverage path below.
+    // "coverage": "test-output/audit/eslint-coverage/coverage-final.json",
+    "maxCrap": 0
+  },
+  "rules": {
+    "coverage-gaps": "off"
+  }
+}

@@ -10,7 +10,8 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "lib": ["dom"],
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "ignoreDeprecations": "6.0"
   },
   "exclude": [
     "out-tsc",
@@ -42,7 +43,16 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
-      "path": "../system-utils/tsconfig.lib.json"
+      "path": "../config/tsconfig.lib.json"
+    },
+    {
+      "path": "../template/tsconfig.lib.json"
+    },
+    {
+      "path": "../env/tsconfig.lib.json"
+    },
+    {
+      "path": "../devtools/tsconfig.lib.json"
     }
   ]
 }

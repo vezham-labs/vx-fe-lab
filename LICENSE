@@ -12,7 +12,7 @@ Parameters
 Licensor:             Vezham Technologies Private Limited
 
 Licensed Work:        The source code and packages in this repository (“the Licensed Work”).
-                      The Licensed Work is (c) 2025 Vezham Technologies Private Limited
+                      The Licensed Work is (c) 2025–present Vezham Technologies Private Limited
 
 Release Tag:          The applicable release tag or commit identifier (for example, “v1.0.0”)
                       published by the Licensor for this version of the Licensed Work.
@@ -58,9 +58,10 @@ Additional Use Grant: 1. You may make non-production use of the Licensed Work.
                          organization, including your affiliates under common control,
                          is not considered a competitive offering.
 
-                      3. Educational institutions and non-profit organizations may use
-                         the Licensed Work in a production environment without restriction,
-                         provided such use is not for commercial profit.
+                      3. Educational institutions and legally recognised non-profit
+                         organizations may use the Licensed Work in a production
+                         environment without restriction, provided such use is not 
+                         for commercial profit.
 
                       For binding interpretive guidance on using Vezham products under
                       the Business Source License, please visit our licensing FAQ:

@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
 
-echo \”[vx/Husky] @vx/INFO: pre-commit\”
-pnpm lint-staged -c .lintstagedrc.js
+set -e
+
+. "$(dirname "$0")/vx-pnpm.sh"
+
+echo "[vx/Husky] @vx/INFO: pre-commit"
+
+pnpm lint-staged -c lint-staged.config.cjs

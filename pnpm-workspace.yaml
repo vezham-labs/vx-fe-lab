@@ -1,4 +1,81 @@
 packages:
-  - 'packages/**/**'
-  - 'apps/**/**'
+  - 'packages/*/*'
+  - '!packages/vx/styles'
+  - 'apps/*'
   - 'apps_*/*'
+
+catalog:
+  '@internationalized/date': 3.12.4
+  '@tanstack/react-hotkeys': ^0.10.0
+  framer-motion: ^12.40.0
+  react-aria-components: 1.21.1
+  yaml: 2.9.1
+
+# vx-bot/NOTE: Resolve docs packages' upstream peer names to the workspace's Vezham forks.
+# vx-bot/TODO: Remove these overrides when the published @vx-oss docs packages use
+# @vx-oss package names in their imports and peer dependencies.
+overrides:
+  fumadocs-core: npm:@vx-oss/docs-core@1.0.17
+  fumadocs-ui: npm:@vx-oss/docs-base-ui@1.0.17
+
+  # vx-bot/NOTE: Pin patched transitive dependencies until upstream ranges include the fixes.
+  # vx-bot/TODO: Codex should review these security overrides when updating dependencies.
+  # Remove each override only when upstream resolves patched versions without it;
+  # regenerate the lockfile, run pnpm audit, and run relevant Nx checks before keeping the removal.
+  # Retain overrides still needed to prevent vulnerable versions from returning.
+  'next>postcss@<8.5.23': 8.5.23
+  'sharp@<0.35.5': 0.35.5
+  'axios@>=1.0.0 <1.20.0': 1.20.0
+  '@cypress/request>uuid@<11.1.1': 11.1.1
+  'qs@<6.16.0': 6.16.0
+  'undici@>=7.0.0 <7.29.1': 7.29.1
+  'js-yaml@>=4.0.0 <4.3.2': 4.3.2
+  'smol-toml@<1.9.0': 1.9.0
+  'seroval@<1.6.8': 1.6.8
+  'handlebars@>=4.0.0 <4.7.10': 4.7.10
+  'http-cache-semantics@<4.3.0': 4.3.0
+  'compression@<1.8.2': 1.8.2
+  'brace-expansion@>=4.0.0 <5.0.12': 5.0.12
+  'figlet@<1.11.3': 1.11.3
+  'serialize-javascript@>=7.1.1 <7.1.2': 7.1.2
+
+# vx-bot/NOTE: Run pre/post hooks around workspace package scripts.
+enablePrePostScripts: true
+
+# vx-bot/NOTE: Hoist internal packages so tools relying on Node.js resolution
+# (e.g. Storybook, Vite plugins, ESLint, etc.) can resolve them consistently.
+publicHoistPattern:
+  - '*@vezham/*'
+  - '*@vx-oss/*'
+  - '*@vx-pro/*'
+
+minimumReleaseAge: 10080 # wjdlz/NOTE: days in minutes - 5 = 7200, 7 = 10080, 14 = 20160
+minimumReleaseAgeExclude:
+  - '@vx-cli/*'
+  - '@vx-oss/*'
+  - '@vezham/*'
+  # vx-bot/NOTE: Allow these security fixes before the seven-day release delay.
+  - 'handlebars@4.7.10' # vx-bot/TODO: Remove after 2026-10-12 22:38 UTC.
+  - 'http-cache-semantics@4.3.0' # vx-bot/TODO: Remove after 2026-10-11 02:57 UTC.
+
+allowBuilds:
+  heroui-pro: true
+  '@heroui-pro/react': true
+  heroui-native-pro: true
+  lightningcss: true
+  esbuild: true
+  '@parcel/watcher': false
+  '@swc/core': false
+  '@vx-oss/heroui-v2-shared-utils': false
+  '@zowe/secrets-for-zowe-sdk': false
+  less: false
+  nx: false
+  sharp: false
+  unrs-resolver: false
+
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - 'pino@9.14.0'
+  - 'semver@6.3.1'
+  - 'undici-types@6.21.0'

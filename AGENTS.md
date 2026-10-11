@@ -21,3 +21,10 @@
 - The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
 
 <!-- nx configuration end-->
+
+## CLI template baseline
+
+Read `vx/handbooks/cli-template-baseline.md` before reviewing, migrating, or
+optimizing `apps/demo` or `apps/school-os`, or when changing conventions for
+CLI-generated applications. Keep durable decisions in that handbook so it remains the single
+source of truth across new and forked chats.

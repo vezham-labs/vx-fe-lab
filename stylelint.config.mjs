@@ -12,12 +12,33 @@ export default {
       '/^padding|^gap/': ['rem'],
       '/^animation/': ['ms']
     },
-    'unit-allowed-list': ['rem', 'oklch', 'deg', '%', 'ms'],
+    'selector-class-pattern': [
+      '^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z][a-z0-9]*(?:-[a-z0-9]+)*)?(?:--[a-z][a-z0-9]*(?:-[a-z0-9]+)*)?$',
+      {
+        severity: 'error',
+        message:
+          'Expected a BEM class: block, block__element, block--modifier, or block__element--modifier (kebab-case words)'
+      }
+    ],
+    'unit-allowed-list': ['rem', 'vw', 'oklch', 'deg', '%', 'ms'],
     'color-no-hex': true,
     'color-no-invalid-hex': true,
     'at-rule-no-unknown': [
       true,
-      { ignoreAtRules: ['/^tailwind/', 'plugin', 'source', 'custom-variant'] }
+      {
+        ignoreAtRules: [
+          '/^tailwind/',
+          'apply',
+          'config',
+          'custom-variant',
+          'plugin',
+          'reference',
+          'source',
+          'theme',
+          'utility',
+          'variant'
+        ]
+      }
     ],
     'hue-degree-notation': 'number',
     'color-function-notation': ['legacy'],

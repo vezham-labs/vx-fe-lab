@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { vitest } from 'vitest'
+import { vi } from 'vitest'
 
 /**
  * Mocks the matchMedia API
@@ -10,13 +10,13 @@ import { vitest } from 'vitest'
 export const mockMatchMedia = (matches: boolean): void => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: vitest.fn().mockImplementation(query => ({
+    value: vi.fn().mockImplementation(query => ({
       matches,
       media: query,
       onchange: null,
-      addEventListener: vitest.fn(),
-      removeEventListener: vitest.fn(),
-      dispatchEvent: vitest.fn()
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn()
     }))
   })
 }

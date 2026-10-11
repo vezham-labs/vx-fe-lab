@@ -1,13 +1,17 @@
 @import 'tailwindcss';
 @import '@vezham/styles-v3';
+@import './template/not-found.css';
 
 /* wjdlz/NOTE: for pro */
-@import '@heroui-pro/react/css';
-@import '@heroui-pro/react/themes/glass';
+@import '@vezham/react-pro-v3/css';
+@import '@vezham/react-pro-v3/themes/glass';
 
-@plugin './plugin.ts';
+@plugin './plugin.mts';
 
 @source '../../../node_modules/@vx-oss/heroui-v2-theme/dist/**/*.{js,ts,jsx,tsx}';
+@source '../devtools/src/**/*.{js,ts,jsx,tsx}';
+@source '../react/src/**/*.{js,ts,jsx,tsx}';
+@source '../template/src/**/*.{js,ts,jsx,tsx}';
 
 /* @custom-variant - @vx/ds */
 

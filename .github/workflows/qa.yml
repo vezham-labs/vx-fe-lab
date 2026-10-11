@@ -9,6 +9,7 @@ on:
     branches:
       - timeline
       - next
+      - next-template
       - feat/**
     # paths:
     #   - '.github/workflows/qa.yml'
@@ -193,9 +194,42 @@ jobs:
         if: always()
         uses: vezham/vx-deployer/.github/actions/nx/post-ops@timeline
 
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+        uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
+        with:
+          GIT_REPO: ${{ env.REPO }}
+          GIT_BRANCH: ${{ env.BRANCH }}
+
+      - name: 🟠 · 🧩 Setup Node & pnpm
+        uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
+        with:
+          HEROUI_AUTH_TOKEN: ${{ secrets.HEROUI_AUTH_TOKEN }}
+
+      - name: 🔵 · 🔍 Audit • Fallow & React Doctor
+        # id: audit
+        # continue-on-error: false
+        shell: bash
+        run: |
+          pnpm nx run @vx:@vx-ws/audit
+
+      - name: 🟠 · ⛭ NX • Post Ops
+        if: always()
+        uses: vezham/vx-deployer/.github/actions/nx/post-ops@timeline
+
+      - name: 🟠 · 🧾 Audit Summary
+        if: always()
+        uses: vezham/vx-deployer/.github/actions/common/summary-audit@timeline
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
   summary:
     if: always()
-    needs: [build, types, lint, prettier, tests, e2e]
+    needs: [audit, build, types, lint, prettier, tests, e2e]
     runs-on: ubuntu-latest
 
     steps:
@@ -204,6 +238,7 @@ jobs:
         with:
           actor: ${{ env.ACTOR }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          audit_result: ${{ needs.audit.result }}
           build_result: ${{ needs.build.result }}
           types_result: ${{ needs.types.result }}
           lint_result: ${{ needs.lint.result }}

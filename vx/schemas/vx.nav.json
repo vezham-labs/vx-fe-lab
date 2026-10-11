@@ -1,0 +1,307 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vezham.com/schemas/vx.nav.json",
+  "title": "Vx navigation configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["navigation"],
+  "properties": {
+    "navigation": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/item"
+      }
+    },
+    "appMenu": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/appMenu"
+      }
+    },
+    "controlCenter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tiles"],
+      "properties": {
+        "editControls": {
+          "type": "boolean",
+          "description": "Show Edit Controls when application Settings navigation is available.",
+          "default": false
+        },
+        "tiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/controlCenterTile"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "title"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "href": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "iconActive": {
+          "type": "string"
+        },
+        "childrenDisplay": {
+          "type": "string",
+          "enum": ["tabs", "sidebar"],
+          "default": "tabs",
+          "description": "Display child pages as tabs or an expandable section sidebar list."
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          }
+        },
+        "toolbar": {
+          "$ref": "#/definitions/toolbar"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label", "icon"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/action"
+          }
+        }
+      }
+    },
+    "toolbar": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "search": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "placeholder": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          ]
+        },
+        "sync": {
+          "type": "boolean"
+        },
+        "filter": {
+          "type": "boolean"
+        },
+        "sort": {
+          "type": "boolean"
+        },
+        "view": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/viewAction"
+          }
+        },
+        "menuActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/action"
+          }
+        },
+        "primaryAction": {
+          "anyOf": [
+            {
+              "const": false
+            },
+            {
+              "$ref": "#/definitions/action"
+            }
+          ]
+        }
+      }
+    },
+    "viewAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label", "icon"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "enum": ["grid", "list"]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "appMenuAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shortcut": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "appMenu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "label", "groups"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "icon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/definitions/appMenuAction"
+            }
+          }
+        }
+      }
+    },
+    "controlCenterTile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "span"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "direction-toggle",
+            "appearance-toggle",
+            "appearance",
+            "theme",
+            "direction",
+            "language",
+            "preview-wifi",
+            "preview-bluetooth",
+            "preview-airdrop",
+            "preview-focus",
+            "preview-stage-manager",
+            "preview-mirroring",
+            "preview-media",
+            "preview-display",
+            "preview-sound",
+            "custom"
+          ]
+        },
+        "span": {
+          "enum": ["compact", "standard", "wide", "full"]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "editable": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "custom"
+              }
+            }
+          },
+          "then": {
+            "required": ["action"]
+          },
+          "else": {
+            "not": {
+              "required": ["action"]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

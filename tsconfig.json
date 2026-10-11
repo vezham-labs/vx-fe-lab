@@ -12,10 +12,22 @@
       "path": "./packages/vx/system-utils"
     },
     {
-      "path": "./apps_internals/playground-e2e"
+      "path": "./packages/vx/template"
     },
     {
-      "path": "./apps_internals/playground"
+      "path": "./packages/vx/env"
+    },
+    {
+      "path": "./packages/vx/devtools"
+    },
+    {
+      "path": "./packages/vx/config"
+    },
+    {
+      "path": "./packages/vx/react"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
+  }
 }

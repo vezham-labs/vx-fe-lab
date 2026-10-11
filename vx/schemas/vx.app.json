@@ -1,0 +1,468 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vezham.com/schemas/vx.app.json",
+  "title": "Vx application configuration",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "framework": {
+      "enum": ["vite", "tanstack", "tanstack-docs", "next"],
+      "description": "Selects generated framework helpers and the Vitest preset."
+    },
+    "core": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "shortName": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "publisher": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "url"],
+          "additionalProperties": false
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "shortName",
+        "version",
+        "description",
+        "publisher",
+        "url"
+      ],
+      "additionalProperties": false
+    },
+    "branding": {
+      "type": "object",
+      "properties": {
+        "themeColor": {
+          "type": "string"
+        },
+        "backgroundColor": {
+          "type": "string"
+        }
+      },
+      "required": ["themeColor", "backgroundColor"],
+      "additionalProperties": false
+    },
+    "i18n": {
+      "type": "object",
+      "properties": {
+        "defaultLanguage": {
+          "type": "string"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["defaultLanguage", "languages"],
+      "additionalProperties": false
+    },
+    "og": {
+      "$ref": "#/definitions/og"
+    },
+    "docs": {
+      "type": "object",
+      "properties": {
+        "docsRoute": {
+          "type": "string"
+        },
+        "og": {
+          "$ref": "#/definitions/og"
+        }
+      },
+      "additionalProperties": false
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "source": {
+                "enum": ["docs", "routes"]
+              },
+              "og": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "prerender": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "outputPath": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": ["path"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "pwa": {
+      "type": "object",
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "orientation": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "startUrl": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "icons": {
+          "$ref": "#/definitions/icons"
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/image"
+          }
+        },
+        "shortcuts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "shortName": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "icons": {
+                "$ref": "#/definitions/icons"
+              }
+            },
+            "required": ["name", "shortName", "url", "icons"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "display",
+        "orientation",
+        "scope",
+        "startUrl",
+        "categories",
+        "icons",
+        "screenshots",
+        "shortcuts"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "theme": {
+          "type": "object",
+          "properties": {
+            "lightColor": {
+              "type": "string"
+            },
+            "darkColor": {
+              "type": "string"
+            },
+            "lightBackgroundColor": {
+              "type": "string"
+            },
+            "darkBackgroundColor": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lightColor",
+            "darkColor",
+            "lightBackgroundColor",
+            "darkBackgroundColor"
+          ],
+          "additionalProperties": false
+        },
+        "platforms": {
+          "type": "object",
+          "properties": {
+            "apple": {
+              "type": "object",
+              "properties": {
+                "mobileWebAppCapable": {
+                  "type": "boolean"
+                },
+                "webAppCapable": {
+                  "type": "boolean"
+                },
+                "touchIcon": {
+                  "type": "string"
+                },
+                "startupImages": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/startupImage"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "colorSchemes": {
+                          "type": "array",
+                          "items": {
+                            "enum": ["light", "dark"]
+                          }
+                        },
+                        "sizes": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/startupImage"
+                          }
+                        }
+                      },
+                      "required": ["path", "sizes"],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "mobileWebAppCapable",
+                "webAppCapable",
+                "touchIcon",
+                "startupImages"
+              ],
+              "additionalProperties": false
+            },
+            "microsoft": {
+              "type": "object",
+              "properties": {
+                "startUrl": {
+                  "type": "string"
+                }
+              },
+              "required": ["startUrl"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["apple", "microsoft"],
+          "additionalProperties": false
+        },
+        "social": {
+          "type": "object",
+          "properties": {
+            "openGraph": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              },
+              "required": ["type"],
+              "additionalProperties": false
+            },
+            "twitter": {
+              "type": "object",
+              "properties": {
+                "creator": {
+                  "type": "string"
+                },
+                "site": {
+                  "type": "string"
+                },
+                "card": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              },
+              "required": ["creator", "site", "card"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["openGraph", "twitter"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["title", "keywords", "theme", "platforms", "social"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["framework", "core", "branding", "pwa", "metadata"],
+  "additionalProperties": false,
+  "definitions": {
+    "og": {
+      "type": "object",
+      "properties": {
+        "logo": {
+          "type": "string"
+        },
+        "site": {
+          "type": "string"
+        },
+        "theme": {
+          "enum": ["light", "dark"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string"
+        },
+        "sizes": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": ["src", "sizes", "type"],
+      "additionalProperties": false
+    },
+    "startupImage": {
+      "type": "object",
+      "properties": {
+        "colorScheme": {
+          "enum": ["light", "dark"]
+        },
+        "device": {
+          "type": "string"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "pixelRatio": {
+          "type": "number"
+        },
+        "path": {
+          "type": "string"
+        },
+        "media": {
+          "type": "string"
+        },
+        "src": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "icons": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/image"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "sizes": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "required": ["path", "sizes", "type"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
