@@ -21,25 +21,24 @@ runtime dependency.
 
 - The CLI will copy only the files required by the selected app type. Do not
   copy an entire playground directory and then remove demos.
-- Keep reusable runtime and generation behavior in `@vx/start` and
-  `@vx/config`. Keep app identity, route intent, and hosting choices in each
+- Keep reusable runtime and generation behavior in `@vezham/start` and
+  `@vezham/config`. Keep app identity, route intent, and hosting choices in each
   app's `vx.app.yaml` and `vx.deploy.yaml`.
 - Author app and deploy configuration in YAML. Keep JSON Schema definitions
   and generated provider artifacts in their existing JSON format. Use one
   YAML source per config; no legacy JSON input fallback is required.
-- Use [`@vx/system-utils`](./system-utils.md) for shared app-agnostic utilities
+- Use [`@vezham/utils`](./system-utils.md) for shared app-agnostic utilities
   instead of duplicating them in generated apps.
-- Keep the reusable application shell in `@vx/react`, including layouts,
-  menus, panels, shell providers, and their state. This package is the internal
-  boundary for React code intended to move to `@vezham/react`. Each app owns
-  its routes and passes its navigation metadata to the shared shell.
+- Keep the reusable application shell in `@vezham/react`, including layouts,
+  menus, panels, shell providers, and their state. Each app owns its routes and
+  passes its navigation metadata to the shared shell.
 - Do not change another `@vx/*` package as part of extracting app-common code
   unless the user explicitly approves that package change.
 - Keep demo pages, sample API routes, stories, fixture content, mocks, and E2E
   projects in the playground when they test behavior. Exclude them from CLI
   output unless the user explicitly selects the corresponding feature.
 - Pass generated `vxI18n` to the shared Control Center as `context={{ i18n: vxI18n }}`.
-  `@vx/react` owns language option labels and document-language behavior; do not
+  `@vezham/react` owns language option labels and document-language behavior; do not
   copy option mapping or hardcoded language lists into app wrappers.
 - Generated files are outputs, not templates to edit by hand. Generate them from
   the app config and source content in the created app.
@@ -52,9 +51,9 @@ runtime dependency.
   their target environment. Metadata generation supplies identity
   and version from `vx.app.yaml` and preserves the deployment setting. Do not
   infer deployment from build mode or substitute placeholder identity/version.
-- Next app configs import `configEnv` from `@vx/env/next/config` so Nx can
+- Next app configs import `configEnv` from `@vezham/env/next/config` so Nx can
   inspect configuration before runtime environment validation. Application code
-  uses `@vx/env/next` for validated settings.
+  uses `@vezham/env/next` for validated settings.
 - Use `V_RELEASE_CHANNEL` (`canary`, `beta`, or `stable`) as the only release-channel
   input in app templates. It defaults to `stable`; compare the channel directly for conditional behavior.
 
@@ -76,6 +75,9 @@ Apply these rules whenever reviewing, migrating, or optimizing either app:
   `@vezham/icons-react`. Removed Vezham implementations and the previous
   Iconify, Lucide, Solar, MDI, and Gravity UI dependencies are not compatibility
   requirements.
+- Keep HeroUI's root `react-aria` peer pinned to the version bundled by the
+  `react-aria-components` catalog version. Custom tooltip triggers require a
+  shared focus context; review both versions together when updating dependencies.
 - Import fixed icons directly from `@vezham/icons-react`. Use `AppIcon` only
   when an icon is selected from serializable data or runtime configuration.
   Data-driven icon identifiers use semantic `vx:*` names, such as `vx:home`,
@@ -140,10 +142,10 @@ detail panel heading, and editor entry. Built-in names are supplied by React;
 `title` is not accepted in YAML or configured tile registrations.
 
 Settings route entries use `SettingsRoute` and `validateSearch` from
-`@vx/react/pages/settings`. React owns section validation, query navigation, and
+`@vezham/react/pages/settings`. React owns section validation, query navigation, and
 Back to app behavior; applications supply their generated Control Center config.
 
-App root routes use `AppLayout` from `@vx/react/layouts/app`. It renders explicit
+App root routes use `AppLayout` from `@vezham/react/layouts/app`. It renders explicit
 children when supplied, otherwise the router outlet. Optional `settings` enables
 Settings navigation and layout switching and requires an app-owned `/settings`
 route. Pass generated Control Center configuration as `controlCenter` and language
@@ -156,7 +158,7 @@ Settings link for editing controls. It requires `AppLayout settings` and an
 app-owned `/settings` route. Docs omit this option. Control Center has no inline
 editor; hiding, reordering, and resetting controls happen in Settings.
 
-`createRouter` from `@vx/start/router/tanstack` supplies default not-found
+`createRouter` from `@vezham/start/router/tanstack` supplies default not-found
 boundaries below the root so unknown pages keep the application shell and panels
 mounted. App catch-all routes only throw `notFound()`; they do not repeat the
 shared `NotFound` component or app identity props. An explicit route
@@ -167,3 +169,73 @@ See [App layout](./ui/app-layout.md) for the shared props and app route examples
 Keep the filename `vx.nav.yaml`. Its required top-level `navigation` array
 defines visible destinations; `items` is not accepted as a legacy alias. Generated
 React exports retain the name `navigationItems`.
+
+## Package library templates
+
+Package templates use `defineConfig` from `@vezham/config/vite-lib`, or
+`@vezham/config/vite-lib/react` for React packages. These presets discover source
+entry points from package exports and CLI entries, preserve ES module paths, keep
+package dependencies external, copy CSS and HTML assets into `dist`, and disable
+minification. They also provide workspace cache defaults and declarations from
+`tsconfig.lib.json`. React packages add the React SWC plugin. Packages can override
+Vite build options through `defineConfig`; test configs remain separate and use
+the shared Vitest preset. Shared library defaults stay internal to the presets.
+
+Declare the `@vezham/config` tooling package in workspace-root
+`devDependencies`, rather than in publishable package manifests. Package builds
+and tests use the workspace installation.
+
+## Public package migration
+
+Reusable implementations live in `@vezham/utils`, `@vezham/hooks`,
+`@vezham/react`, `@vezham/env`, `@vezham/template`, `@vezham/start`,
+`@vezham/devtools`, and `@vezham/config`. Preserve existing runtime subpaths
+when changing package scope. Template components, pages, and store keep their
+subpaths; `@vezham/template/app` is the aggregate app entry.
+
+This repository tests installed npm packages. Keep shared conventions aligned with
+`vx-fe-pkgs-timeline`, while implementing public package changes in that repository.
+Declare published packages at the workspace root. Consumers import
+`@vezham/config` directly from its built npm exports; this repository does not
+need the package author's workspace loaders or local public-package builds.
+Root `prepare` only runs Husky. Cross-package imports use package paths.
+
+The shared app preset in `@vezham/config` alpha.9 and later owns
+`ssr.noExternal` for `@vezham/start` and `@vezham/env`; CDN and docs inherit it.
+App configs do not need to repeat those entries. Keep installed runtime packages
+in Vitest's `server.deps.inline` list so Vite resolves preserved `import.meta.env`
+expressions and applies test mocks instead of executing native Node modules.
+
+Workspace CSS remains under `packages/vx/styles`. Public UI packages expose
+`dist/index.css` through their root `style` export and top-level `style` field.
+Import the package name from CSS; JavaScript imports retain their runtime exports.
+These stylesheets register the packages' compiled JavaScript with Tailwind.
+The shared library preset emits component CSS to `dist/index.css` and merges the
+authored stylesheet into that file. Preserve the generated scoped selectors and
+keyframes; replacing this output with only `@source` directives breaks panel
+animations and sizing in consumers of the built package.
+The docs runtime uses `@vezham/start/styles/docs` for docs layouts and pages.
+Keep source paths inside each package's stylesheet rather than referring to
+workspace source directories from shared CSS. CSS exports remain side effects;
+JavaScript exports remain eligible for tree shaking.
+Apps consume published stylesheets from installed npm packages; they do not
+need implicit dependencies on local `devtools`, `react`, or `template` projects.
+Keep `packages/vx/styles/**/*` in Nx shared cache inputs and register its CSS
+entry points in Fallow. Keep root-only package dependency exceptions in Fallow.
+
+Public library builds preserve ES modules, externalize package dependencies, and
+publish declarations for every JavaScript export. Environment adapters defer app
+values to the consuming app build. Shared test setup and metadata HTML templates
+ship with `@vezham/config`.
+
+Keep component-owned state and hooks with their UI. Extract independent hooks
+into `@vezham/hooks` and plain utilities into `@vezham/utils`.
+
+## Shared test types
+
+App test configs extend their existing base plus the root `tsconfig.spec.json`.
+The root test config owns Vitest, DOM matcher, and framework asset types. Do not
+repeat the `types` array in app test configs: TypeScript replaces inherited arrays.
+Keep these declarations out of production configs. The shared `@vezham/config`
+Vitest setup registers matchers at runtime, so individual tests do not import
+`@testing-library/jest-dom/vitest`. Future CLI templates use the same inheritance.

@@ -154,6 +154,7 @@ tsconfig.tsbuildinfo
 # Generated Source
 # ============================================================================
 
+CHANGELOG.md
 **/routeTree.gen.ts
 **/src/generated/**
 

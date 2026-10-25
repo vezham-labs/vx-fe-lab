@@ -1,5 +1,12 @@
 # @vx/INFO: @vx/ci
-name: QA
+name: 🧪 QA
+
+run-name: >-
+  ${{
+    github.event_name == 'schedule' && '🧪 QA • 🕒 Scheduled' ||
+    github.event_name == 'workflow_dispatch' && '🧪 QA • ▶️ On demand' ||
+    ''
+  }}
 
 on:
   schedule:
@@ -8,23 +15,13 @@ on:
   push:
     branches:
       - timeline
-      - next
-      - next-template
-      - feat/**
+      - next**
+      - feat**
+      - fix**
     # paths:
     #   - '.github/workflows/qa.yml'
     #   - 'vx/handbooks/ci.md'
     #   - 'packages/**'
-
-run-name: >
-  🧪 QA • ${{
-      github.event_name == 'schedule' && '🕒 Scheduled' ||
-      github.event_name == 'workflow_dispatch' && '⚡ Trails' ||
-      github.event.head_commit.message ||
-      github.event.workflow_run && github.event.workflow_run.head_commit.message ||
-      github.ref_name
-  }} 
-  - by @${{ github.actor || 'vx/ci' }}
 
 concurrency:
   group: qa-${{ github.workflow }}-${{ github.ref }}
@@ -40,7 +37,7 @@ env:
   REPO: ${{ github.repository }}
   BRANCH: ${{ github.ref_name }}
   ACTOR: ${{ github.actor || 'vx/ci' }}
-  NX_NO_CLOUD: true
+  # NX_NO_CLOUD: true
   VX_NAME: '@vx/fe-kit'
   VX_SKIP: '@vx/fe-kit'
   HEROUI_AUTH_TOKEN: ${{ secrets.HEROUI_AUTH_TOKEN }}
@@ -50,11 +47,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -76,11 +77,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -100,11 +105,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -120,15 +129,19 @@ jobs:
         if: always()
         uses: vezham/vx-deployer/.github/actions/nx/post-ops@timeline
 
-  prettier:
+  format:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -148,11 +161,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -173,11 +190,15 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -197,13 +218,20 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    concurrency:
+      group: audit-${{ github.workflow }}-${{ github.sha }}
+      cancel-in-progress: false
 
     steps:
-      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.BRANCH }}
+      - name: 🔵 · 🔎 Set short SHA
+        shell: bash
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: 🟠 · 🧰 Checkout • ${{ env.REPO }}@${{ env.SHORT_SHA }}
         uses: vezham/vx-deployer/.github/actions/common/setup-checkout@timeline
         with:
           GIT_REPO: ${{ env.REPO }}
-          GIT_BRANCH: ${{ env.BRANCH }}
+          GIT_BRANCH: ${{ github.sha }}
 
       - name: 🟠 · 🧩 Setup Node & pnpm
         uses: vezham/vx-deployer/.github/actions/common/setup-install@timeline
@@ -229,7 +257,7 @@ jobs:
 
   summary:
     if: always()
-    needs: [audit, build, types, lint, prettier, tests, e2e]
+    needs: [audit, build, types, lint, format, tests, e2e]
     runs-on: ubuntu-latest
 
     steps:
@@ -242,6 +270,6 @@ jobs:
           build_result: ${{ needs.build.result }}
           types_result: ${{ needs.types.result }}
           lint_result: ${{ needs.lint.result }}
-          prettier_result: ${{ needs.prettier.result }}
+          format_result: ${{ needs.format.result }}
           tests_result: ${{ needs.tests.result }}
           e2e_result: ${{ needs.e2e.result }}
