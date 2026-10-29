@@ -177,11 +177,21 @@ Use `<type>(<scope>): <subject>` for every commit header. Scope rules:
 
 - Use the normalized Nx project name for a project-specific change, such as
   `start` for `@vezham/start`.
+- When normalized names collide, use the full Nx project name. For example,
+  `fix(@vx-cli/react): use hyphens in app category paths` identifies the CLI,
+  and `fix(@vx/react): update workspace components` identifies the local package.
+  Commitlint rejects the ambiguous short scope `react` and lists the full names.
 - For changes affecting two or three projects, use distinct comma-separated
   scopes without spaces and sort them alphabetically, such as
   `fix(env,start): use generated app version`.
 - Use no more than three scopes. Use `repo` or `workspace` alone for broader
   changes; never combine either one with another scope.
+
+Nx checks every commit since the previous release. Adding a new commit with a
+unique scope does not fix an ambiguous scope already in that history. For an
+already-pushed ambiguous commit, dispatch the next release with an explicit
+version (for example, `26.0.0-beta.4` after `26.0.0-beta.3`). Automatic version
+selection can resume after that release establishes the next tag.
 
 The release config maps commit types like this:
 

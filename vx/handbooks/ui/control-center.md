@@ -228,6 +228,10 @@ gutters when rows need more breathing room.
 The grid governs placement. A tile component governs its content, including
 truncation, icon size, and direct action.
 
+The Settings gallery reuses this grid and its span variants for both suggested
+controls and the live preview. A control selected at any span must retain that
+same footprint after it is added to Control Center.
+
 ## Panel outlet
 
 The overlay owner keeps `isOpen` and `activePanel` state. Render home when

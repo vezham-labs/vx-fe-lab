@@ -21,9 +21,29 @@ runtime dependency.
 
 - The CLI will copy only the files required by the selected app type. Do not
   copy an entire playground directory and then remove demos.
+- Follow [Application Types and Categories](./application-categories.md) for
+  the type-first flow, category filters and order, matching folder and project
+  names, and main-group versus dedicated-group placement. Add template role
+  suffixes once after name normalization; `--skipSuffix` preserves the supplied
+  project name for standalone sites. Keep project identity and E2E names aligned
+  with that final name.
 - Keep reusable runtime and generation behavior in `@vezham/start` and
   `@vezham/config`. Keep app identity, route intent, and hosting choices in each
   app's `vx.app.yaml` and `vx.deploy.yaml`.
+- Seed all generated project manifests (apps, E2E, mocks, and both library types)
+  from the consumer repository's
+  latest matching SemVer release tag, using the workspace `release.releaseTag`
+  pattern, prerelease preference, and branch settings. Read tags from the consumer
+  workspace root through the shared `resolveInitialVersion` utility. Fall back
+  to the installed `@vx-cli/react` version when Git or
+  a matching tag is unavailable. This reads the existing release version without
+  calculating a bump or fetching tags. Keep app `package.json`, `vx.app.yaml`
+  core version, `.env` `V_APP_VER`, and CDN HTML asset version tags aligned.
+  Generated projects manage their own versions after creation.
+- Use spaced display names for app metadata and visible text: `playground-app`
+  becomes `Playground App` in names, descriptions, titles, and docs content.
+  Keep `CDN` uppercase as a display-name word, such as `Playground CDN`.
+  Derive IDs, URLs, and file names from the normalized project slug.
 - Author app and deploy configuration in YAML. Keep JSON Schema definitions
   and generated provider artifacts in their existing JSON format. Use one
   YAML source per config; no legacy JSON input fallback is required.
@@ -172,6 +192,18 @@ React exports retain the name `navigationItems`.
 
 ## Package library templates
 
+Generated TypeScript and React libraries use the same initial version policy as
+apps and mocks: the consumer's matching Git release tag, then the installed CLI
+version. Pass the resolved value as `projectVersion` to templates; project
+manifests must not hardcode an initial version.
+
+Generated TypeScript and React libraries derive repository metadata from the
+consumer workspace's `package.json`, falling back to its Git `origin`. Normalize
+HTTP(S) and SSH repository URLs to the npm `git+` form with a `.git` suffix;
+for example, `https://github.com/owner/repo` becomes
+`git+https://github.com/owner/repo.git`. Keep repository values dynamic and serialize
+them with `JSON.stringify` in the package templates.
+
 Package templates use `defineConfig` from `@vezham/config/vite-lib`, or
 `@vezham/config/vite-lib/react` for React packages. These presets discover source
 entry points from package exports and CLI entries, preserve ES module paths, keep
@@ -183,7 +215,9 @@ the shared Vitest preset. Shared library defaults stay internal to the presets.
 
 Declare the `@vezham/config` tooling package in workspace-root
 `devDependencies`, rather than in publishable package manifests. Package builds
-and tests use the workspace installation.
+and tests use the workspace installation. Vite and Vitest templates import its
+published subpaths directly. Library TypeScript configs do not reference the
+removed `packages/vx/config` project; their initial `references` array is empty.
 
 ## Public package migration
 
@@ -206,7 +240,12 @@ App configs do not need to repeat those entries. Keep installed runtime packages
 in Vitest's `server.deps.inline` list so Vite resolves preserved `import.meta.env`
 expressions and applies test mocks instead of executing native Node modules.
 
-Workspace CSS remains under `packages/vx/styles`. Public UI packages expose
+Workspace CSS remains under `packages/vx/styles`. Generated apps import this
+workspace stylesheet from `src/app/global.css`; documentation apps also import
+its `docs` entry. Calculate relative imports from the generated project location
+so nested directories resolve the same workspace styles.
+
+Public UI packages expose
 `dist/index.css` through their root `style` export and top-level `style` field.
 Import the package name from CSS; JavaScript imports retain their runtime exports.
 These stylesheets register the packages' compiled JavaScript with Tailwind.
