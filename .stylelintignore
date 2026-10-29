@@ -115,6 +115,9 @@ testem.log
 .eslintcache
 .stylelintcache
 
+# Audit tool output
+state/
+
 # Vite / Vitest
 vite.config.*.timestamp*
 vitest.config.*.timestamp*

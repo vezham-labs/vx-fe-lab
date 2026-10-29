@@ -1,6 +1,6 @@
 {
   "name": "@vx/react",
-  "version": "26.0.0-beta.2",
+  "version": "26.0.0-beta.3",
   "private": true,
   "exports": {
     "./package.json": "./package.json",

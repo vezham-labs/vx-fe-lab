@@ -119,6 +119,9 @@ testem.log
 .eslintcache
 .stylelintcache
 
+# Audit tool output
+state/
+
 # Vite / Vitest
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
@@ -205,3 +208,4 @@ firebase-debug.*.log*
 # Claude
 .claude/worktrees
 .claude/settings.local.json
+.vitest

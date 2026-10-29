@@ -208,6 +208,12 @@ jobs:
       - name: 🔵 · 🎭 E2E • Playwright
         shell: bash
         run: |
+          E2E_PROJECTS="$(pnpm nx show projects --withTarget e2e --json)"
+          if [ "$E2E_PROJECTS" = "[]" ]; then
+            echo "No Nx projects define an e2e target; skipping Playwright install."
+            exit 0
+          fi
+
           npx playwright install --with-deps
           pnpm nx run-many -t e2e
 

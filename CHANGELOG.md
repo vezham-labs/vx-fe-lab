@@ -1,3 +1,18 @@
+## 26.0.0-beta.3 (2026-10-28)
+
+### 🏡 Chore
+
+- **repo:** update packages to beta ([3e30c9dc](https://github.com/vezham-labs/vx-fe-kit/commit/3e30c9dc))
+- **workspace:** reserve hooks catalog version ([c9c3d93c](https://github.com/vezham-labs/vx-fe-kit/commit/c9c3d93c))
+
+### deps
+
+- **workspace:** update Fallow to 3.37.0 ([9fd6dceb](https://github.com/vezham-labs/vx-fe-kit/commit/9fd6dceb))
+
+### ❤️ Thank You
+
+- vx-vigneshwaran
+
 ## 26.0.0-beta.2 (2026-10-25)
 
 ### 🚀 Features

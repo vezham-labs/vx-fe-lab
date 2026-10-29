@@ -13,6 +13,17 @@ catalog:
   framer-motion: ^12.40.0
   react-aria-components: 1.21.1
   yaml: 2.9.1
+  # vx-bot/NOTE: vx-pkgs
+  '@vezham/env': 26.0.0-beta.3
+  '@vezham/react': 26.0.0-beta.3
+  '@vezham/start': 26.0.0-beta.3
+  '@vezham/template': 26.0.0-beta.3
+  '@vezham/utils': 26.0.0-beta.3
+  '@vezham/devtools': 26.0.0-beta.3
+  '@vezham/config': 26.0.0-beta.3
+  # vx-bot/NOTE: Reserve the hooks catalog version for future direct workspace consumers.
+  # fallow-ignore-next-line unused-catalog-entry
+  '@vezham/hooks': 26.0.0-beta.3
 
 # vx-bot/NOTE: Resolve docs packages' upstream peer names to the workspace's Vezham forks.
 # vx-bot/TODO: Remove these overrides when the published @vx-oss docs packages use
@@ -65,6 +76,15 @@ minimumReleaseAgeExclude:
   - 'body-parser@1.20.9'
   - 'fast-uri@3.1.9'
   - 'serialize-javascript@7.1.3'
+  # vx-bot/NOTE: Allow the requested Fallow 3.37.0 release and its matching binaries.
+  # vx-bot/TODO: Remove these exceptions after 2026-11-03 19:50 UTC.
+  - 'fallow@3.37.0'
+  - 'fallow-type-aware@3.37.0'
+  - '@fallow-cli/*'
+  # vx-bot/NOTE: Allow the requested Nx 24.0.2 migration and matching plugins/native binaries.
+  # vx-bot/TODO: Remove these temporary Nx exceptions after 2026-11-02 21:00 UTC.
+  - '@nx/*'
+  - 'nx@24.0.2'
 
 allowBuilds:
   heroui-pro: true
